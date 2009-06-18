@@ -1,0 +1,3 @@
+fop.home=${user.home}/opt/fop-0.95/
+fop.cfg=${user.home}/.fop.conf
+

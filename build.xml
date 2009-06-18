@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="xslt-typograf" default="test">  
+
+  <!-- SETTINGS -->
+
+  <!-- build-env settings -->
+  <property file="${basedir}/build.properties"/>
+
+  <!-- directories structure -->
+  <property name="dir.dist" value="${basedir}/target"/>
+  <property name="dir.dist.tmp" value="${dir.dist}/tmp"/>
+  <property name="dir.test.docs" value="${basedir}/src/test"/>
+  <property name="dir.src.build" value="${basedir}/src/xslt"/>
+
+  <!-- build scripts -->
+  <property name="build.tdoc" value="${dir.src.build}/typography.xsl"/>
+
+  <!-- BUILD TARGETS -->
+  
+  <!-- private -->
+
+  <target name="-init">
+    <taskdef name="fop" 
+         classname="org.apache.fop.tools.anttasks.Fop">
+      <classpath>
+        <fileset dir="${fop.home}/lib">
+          <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${fop.home}/build">
+          <include name="fop.jar"/>
+          <include name="fop-hyph.jar" />
+        </fileset>
+      </classpath>
+    </taskdef>
+  </target>
+
+  <!-- public -->
+
+  <target name="test-fo" depends="-init">
+    <xslt style="${build.tdoc}" basedir="${dir.test.docs}" destdir="${dir.dist.tmp}" force="true">
+      <mapper type="glob" from="*.xml" to="*.fo"/>
+    </xslt>
+  </target>
+
+  <target name="test-pdf" depends="-init, test-fo">
+    <fop format="application/pdf" outdir="${dir.dist}"
+         basedir="${dir.test.docs}"
+         userconfig="${fop.cfg}">
+      <fileset dir="${dir.dist.tmp}">
+        <include name="*.fo"/>
+      </fileset>
+    </fop>
+  </target>
+
+  <target name="test" depends="-init,test-pdf">
+  </target>
+
+  <target name="clean" depends="-init">
+    <delete dir="${dir.dist}"/>
+    <echo message="Cleaned"/>
+  </target>
+
+</project>
+
