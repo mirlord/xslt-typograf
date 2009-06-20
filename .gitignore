@@ -1,4 +1,6 @@
 target/
 .*.swp
 build.properties
+docbook2html.xsl
+docbook2fo.xsl
 

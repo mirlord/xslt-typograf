@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<db:article xmlns:db="http://docbook.org/ns/docbook"
+            version="5.0"
+            lang="RU">
+
+  <db:section>
+    <db:title>Что такое xslt-typograf?</db:title>
+
+    <db:para>...</db:para>
+
+  </db:section>
+
+</db:article>
+
+

@@ -9,12 +9,21 @@
 
   <!-- directories structure -->
   <property name="dir.dist" value="${basedir}/target"/>
+  <property name="dir.dist.assemble" value="${dir.dist}/assemble"/>
   <property name="dir.dist.tmp" value="${dir.dist}/tmp"/>
-  <property name="dir.test.docs" value="${basedir}/src/test"/>
-  <property name="dir.src.build" value="${basedir}/src/xslt"/>
+  <property name="dir.dist.test" value="${dir.dist}/test"/>
+  <property name="dir.test.docs" value="${basedir}/test/docs"/>
+  <property name="dir.test.xslt" value="${basedir}/test/xslt"/>
+  <property name="dir.src.xslt" value="${basedir}/src/xslt"/>
+  <property name="dir.src.docs" value="${basedir}/src/docs"/>
+  <property name="dir.src.build" value="${basedir}/src/build"/>
 
   <!-- build scripts -->
-  <property name="build.tdoc" value="${dir.src.build}/typography.xsl"/>
+  <property name="build.test.fo" value="${dir.test.xslt}/fo.xsl"/>
+  <property name="build.test.html" value="${dir.test.xslt}/html.xsl"/>
+
+  <property name="build.docs.fo" value="${dir.src.build}/dbk2fo.xsl"/>
+  <property name="build.docs.html" value="${dir.src.build}/dbk2html.xsl"/>
 
   <!-- BUILD TARGETS -->
   
@@ -33,32 +42,71 @@
         </fileset>
       </classpath>
     </taskdef>
+
+    <mkdir dir="${dir.dist.tmp}"/>
   </target>
 
   <!-- public -->
 
+  <!-- test -->
+
+  <target name="test-html" depends="-init">
+    <xslt style="${build.test.html}" basedir="${dir.test.docs}" destdir="${dir.dist.test}" force="true">
+      <mapper type="glob" from="*.xml" to="*.html"/>
+    </xslt>
+  </target>
+
   <target name="test-fo" depends="-init">
-    <xslt style="${build.tdoc}" basedir="${dir.test.docs}" destdir="${dir.dist.tmp}" force="true">
+    <xslt style="${build.test.fo}" basedir="${dir.test.docs}" destdir="${dir.dist.test}" force="true">
       <mapper type="glob" from="*.xml" to="*.fo"/>
     </xslt>
   </target>
 
   <target name="test-pdf" depends="-init, test-fo">
-    <fop format="application/pdf" outdir="${dir.dist}"
+    <fop format="application/pdf" outdir="${dir.dist.test}"
          basedir="${dir.test.docs}"
          userconfig="${fop.cfg}">
-      <fileset dir="${dir.dist.tmp}">
+      <fileset dir="${dir.dist.test}">
         <include name="*.fo"/>
       </fileset>
     </fop>
   </target>
 
-  <target name="test" depends="-init,test-pdf">
+  <target name="test" depends="-init,test-html">
   </target>
+
+  <target name="test-all" depends="-init,test-html,test-pdf">
+  </target>
+
+  <!-- documentation -->
+
+  <target name="build-html" depends="-init">
+    <mkdir dir="${dir.dist.assemble}/docs"/>
+    <!--<copy todir="${dir.dist.assemble}/docs/images">-->
+      <!--<fileset dir="${dir.src.docs}/images"/>-->
+    <!--</copy>-->
+    <xslt style="${build.docs.html}" basedir="${dir.src.docs}" destdir="${dir.dist.assemble}/docs" force="true">
+      <mapper type="glob" from="*.xml" to="*.html"/>
+    </xslt>
+  </target>
+
+  <target name="build-dist" depends="build-html">
+    <tstamp>
+      <format property="build.date" pattern="yyyy-MM-dd"/>
+    </tstamp>
+    <zip destfile="${dir.dist}/${ant.project.name}-${build.date}.zip">
+      <fileset dir="${dir.dist.assemble}"/>
+    </zip>
+  </target>
+
+  <!-- misc -->
 
   <target name="clean" depends="-init">
     <delete dir="${dir.dist}"/>
     <echo message="Cleaned"/>
+  </target>
+
+  <target name="all" depends="build-dist">
   </target>
 
 </project>
