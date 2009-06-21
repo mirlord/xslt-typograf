@@ -21,7 +21,7 @@
     version="1.0">
 
   <xsl:param name="typograf.cfg.replace.mdots" select="'true'"/>
-  <xsl:param name="typograf.cfg.tags.ignore" select="'screen|synopsis'"/>
+  <xsl:param name="typograf.cfg.tags.ignore" select="'|screen|synopsis|'"/>
   <xsl:param name="typograf.cfg.debug" select="'false'"/>
 
   <!-- ROOT template -->
@@ -36,7 +36,7 @@
 
     <!-- ignoring tags with preformatted content -->
     <xsl:choose>
-      <xsl:when test="contains($typograf.cfg.tags.ignore, local-name(..))">
+      <xsl:when test="contains($typograf.cfg.tags.ignore, concat('|', local-name(..), '|') )">
         <xsl:value-of select="."/>
       </xsl:when>
       <xsl:otherwise>
