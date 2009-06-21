@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<db:article xmlns:db="http://docbook.org/ns/docbook"
+            version="5.0"
+            lang="RU">
+
+  <db:sect1>
+    <db:title>Тест корректировки знаков пунктуации</db:title>
+
+    <db:para>Простой тест многоточия в середине... и в конце...</db:para>
+
+<db:screen>
+А вот здесь вообще
+никакой обработки многоточия...
+быть не должно.
+</db:screen>
+
+  </db:sect1>
+
+</db:article>
+
+

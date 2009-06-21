@@ -13,29 +13,60 @@
   <!ENTITY ldash "&#x2014;">
   <!ENTITY laquo "&#x00AB;">
   <!ENTITY raquo "&#x00BB;">
-  <!ENTITY drapos "``">
-  <!ENTITY dapos "''">
+  <!ENTITY mdots "&#x2026;">
 ]>
 
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     version="1.0">
 
+  <xsl:param name="typograf.cfg.replace.mdots" select="'true'"/>
+
   <!-- typography -->
 
   <xsl:template match="text()">
 
-    <xsl:call-template name="replace-dash">
+    <xsl:variable name="step1">
+      <xsl:choose>
+        <xsl:when test="$typograf.cfg.replace.mdots='true'">
+          <xsl:call-template name="typograf.replace-mdots">
+            <xsl:with-param name="source_str" select="normalize-space(.)"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="."/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:call-template name="typograf.replace-dash">
       <xsl:with-param name="source_str">
-        <xsl:call-template name="replace-quotes">
-          <xsl:with-param name="source_str" select="normalize-space(.)"/>
+        <xsl:call-template name="typograf.replace-quotes">
+          <xsl:with-param name="source_str" select="$step1"/>
         </xsl:call-template>
       </xsl:with-param>
     </xsl:call-template>
 
   </xsl:template>
 
-  <xsl:template name="replace-quotes">
+  <xsl:template name="typograf.replace-mdots">
+    <xsl:param name="source_str" select="."/>
+    <xsl:variable name="delim_str">...</xsl:variable>
+    <xsl:choose>
+      <xsl:when test="contains($source_str, $delim_str)">
+        <xsl:value-of select="substring-before($source_str, $delim_str)"/>
+        <xsl:text>&mdots;</xsl:text>
+        <xsl:call-template name="typograf.replace-mdots">
+          <xsl:with-param name="source_str" select="substring-after($source_str, $delim_str)"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$source_str"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="typograf.replace-quotes">
     <xsl:param name="source_str" select="."/>
     <xsl:param name="opening_quot">
       <xsl:text>&quot;</xsl:text>
@@ -75,7 +106,7 @@
             <xsl:value-of select="$skip_str"/>
 
             <!-- ... & then processing everything after it -->
-            <xsl:call-template name="replace-quotes">
+            <xsl:call-template name="typograf.replace-quotes">
               <xsl:with-param name="source_str"
                               select="$tail"/>
               <xsl:with-param name="opening_quot" select="$opening_quot"/>
@@ -101,7 +132,7 @@
 
             <!-- replacing internal quotes -->
 
-            <xsl:call-template name="replace-quotes">
+            <xsl:call-template name="typograf.replace-quotes">
               <xsl:with-param name="source_str"
                               select="normalize-space($quoted_str)"/>
               <xsl:with-param name="opening_quot" select="$opening_quot_int"/>
@@ -116,7 +147,7 @@
             <!-- end of internal quotes replacement -->
 
             <xsl:value-of select="$closing_quot_repl"/>
-            <xsl:call-template name="replace-quotes">
+            <xsl:call-template name="typograf.replace-quotes">
               <xsl:with-param name="source_str"
                               select="$rest_of_tail"/>
               <xsl:with-param name="opening_quot" select="$opening_quot"/>
@@ -136,14 +167,14 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template name="replace-dash">
+  <xsl:template name="typograf.replace-dash">
     <xsl:param name="source_str" select="."/>
     <xsl:variable name="delim_str"> - </xsl:variable>
     <xsl:choose>
       <xsl:when test="contains($source_str, $delim_str)">
         <xsl:value-of select="substring-before($source_str, $delim_str)"/>
         <xsl:text>&nbsp;&ldash; </xsl:text>
-        <xsl:call-template name="replace-dash">
+        <xsl:call-template name="typograf.replace-dash">
           <xsl:with-param name="source_str"
                           select="substring-after($source_str, $delim_str)"/>
         </xsl:call-template>
