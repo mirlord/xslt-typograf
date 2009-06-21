@@ -1,0 +1,21 @@
+
+XSLT-Typograf
+
+
+ABOUT
+
+XSLT-Typograf is a simple tool for typographical pre-processing of the text,
+implemented in pure XSLT. It could be useful in documentation processing and
+formatting tools, wich produces documents in any format (pdf, html, odf, etc.)
+
+Current version based on the rules for the russian text typography, but it
+could be easily modified to support any other rules.
+
+
+USAGE
+
+The simplest way to use this: just to import the only stylesheet
+(`src/xslt/typography.xsl`) to any of your stylesheets and... that's all.
+Currently it has no any customization abilities. So if you need such tuning -
+please, do it in any way you wish.
+

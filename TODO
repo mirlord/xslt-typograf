@@ -1,5 +1,6 @@
 
 xslt-typograf todo-list:
+ * documentation...
  * automatically add [nbsp] in most common cases
  * contents of specific elements is preformatted, it's typographical
    re-formatting should be omitted
