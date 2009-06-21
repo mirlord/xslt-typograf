@@ -18,25 +18,39 @@
 
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:tpf="http://vladimir-chizhov.ru/ns/typograf"
     version="1.0">
 
   <xsl:param name="typograf.cfg.replace.mdots" select="'true'"/>
-  <xsl:param name="typograf.cfg.tags.ignore" select="'screen|synopsis'"/>
+  <xsl:param name="typograf.cfg.tags.ignore">
+    <tpf:element local-name="screen" ns="http://docbook.org/ns/docbook"/>
+  </xsl:param>
   <xsl:param name="typograf.cfg.debug" select="'false'"/>
 
   <!-- ROOT template -->
   <xsl:template match="text()">
     
-    <xsl:choose>
-      <xsl:when test="$typograf.cfg.debug='true'">
-        [DEBUG {<xsl:value-of select="local-name(..)"/>},
-               {<xsl:value-of select="contains($typograf.cfg.tags.ignore, local-name(..))"/>}]
-      </xsl:when>
-    </xsl:choose>
+    <xsl:variable name="skip-tag">
+      <!-- hmm... -->
+      <xsl:choose>
+        <xsl:when test="$typograf.cfg.tags.ignore/tpf:element/[@name=local-name(..)]">
+          true
+        </xsl:when>
+        <xsl:otherwise>
+          false
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    
+    <xsl:if test="$typograf.cfg.debug='true'">
+      [DEBUG {<xsl:value-of select="local-name(..)"/>},
+             {<xsl:value-of select="contains($typograf.cfg.tags.ignore, local-name(..))"/>}
+             {<xsl:value-of select="$ignore"/>}]
+    </xsl:if>
 
     <!-- ignoring tags with preformatted content -->
     <xsl:choose>
-      <xsl:when test="contains($typograf.cfg.tags.ignore, local-name(..))">
+      <xsl:when test="$skip-tag='true'">
         <xsl:value-of select="."/>
       </xsl:when>
       <xsl:otherwise>
@@ -105,9 +119,15 @@
       <xsl:text>''</xsl:text>
     </xsl:param>
 
-    <xsl:variable name="debug">
-      [CALL: {<xsl:value-of select="$source_str"/>} {oq: <xsl:value-of select="$opening_quot"/>} {cq: <xsl:value-of select="$closing_quot"/>} {oqr: <xsl:value-of select="$opening_quot_repl"/>} {cqr: <xsl:value-of select="$closing_quot_repl"/>} {oqi: <xsl:value-of select="$opening_quot_int"/>} {cqi: <xsl:value-of select="$closing_quot_int"/>}]
-    </xsl:variable>
+    <xsl:if test="$typograf.cfg.debug='true'">
+      [CALL: {<xsl:value-of select="$source_str"/>}
+             {oq: <xsl:value-of select="$opening_quot"/>}
+             {cq: <xsl:value-of select="$closing_quot"/>}
+             {oqr: <xsl:value-of select="$opening_quot_repl"/>}
+             {cqr: <xsl:value-of select="$closing_quot_repl"/>}
+             {oqi: <xsl:value-of select="$opening_quot_int"/>}
+             {cqi: <xsl:value-of select="$closing_quot_int"/>}]
+    </xsl:if>
 
     <!--<xsl:value-of select="$debug"/>-->
 
