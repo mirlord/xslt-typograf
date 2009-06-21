@@ -22,6 +22,14 @@
     </html>
   </xsl:template>
 
+  <xsl:template match="db:screen">
+    <pre><xsl:apply-templates/></pre>
+  </xsl:template>
+
+  <xsl:template match="db:synopsis">
+    <pre><xsl:apply-templates/></pre>
+  </xsl:template>
+
   <xsl:template match="db:para">
     <p><xsl:apply-templates/></p>
   </xsl:template>

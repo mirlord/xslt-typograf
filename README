@@ -16,6 +16,7 @@ USAGE
 
 The simplest way to use this: just to import the only stylesheet
 (`src/xslt/typography.xsl`) to any of your stylesheets and... that's all.
-Currently it has no any customization abilities. So if you need such tuning -
+Currently it has some basic customization abilities, but their description
+will appear in a nearest feature. So if you need such tuning -
 please, do it in any way you wish.
 

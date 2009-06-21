@@ -21,31 +21,49 @@
     version="1.0">
 
   <xsl:param name="typograf.cfg.replace.mdots" select="'true'"/>
+  <xsl:param name="typograf.cfg.tags.ignore" select="'screen|synopsis'"/>
+  <xsl:param name="typograf.cfg.debug" select="'false'"/>
 
-  <!-- typography -->
-
+  <!-- ROOT template -->
   <xsl:template match="text()">
+    
+    <xsl:choose>
+      <xsl:when test="$typograf.cfg.debug='true'">
+        [DEBUG {<xsl:value-of select="local-name(..)"/>},
+               {<xsl:value-of select="contains($typograf.cfg.tags.ignore, local-name(..))"/>}]
+      </xsl:when>
+    </xsl:choose>
 
-    <xsl:variable name="step1">
-      <xsl:choose>
-        <xsl:when test="$typograf.cfg.replace.mdots='true'">
-          <xsl:call-template name="typograf.replace-mdots">
-            <xsl:with-param name="source_str" select="normalize-space(.)"/>
-          </xsl:call-template>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="."/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
+    <!-- ignoring tags with preformatted content -->
+    <xsl:choose>
+      <xsl:when test="contains($typograf.cfg.tags.ignore, local-name(..))">
+        <xsl:value-of select="."/>
+      </xsl:when>
+      <xsl:otherwise>
+        <!-- ok, let's process this -->
 
-    <xsl:call-template name="typograf.replace-dash">
-      <xsl:with-param name="source_str">
-        <xsl:call-template name="typograf.replace-quotes">
-          <xsl:with-param name="source_str" select="$step1"/>
+        <xsl:variable name="step1">
+          <xsl:choose>
+            <xsl:when test="$typograf.cfg.replace.mdots='true'">
+              <xsl:call-template name="typograf.replace-mdots">
+                <xsl:with-param name="source_str" select="normalize-space(.)"/>
+              </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="."/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+
+        <xsl:call-template name="typograf.replace-dash">
+          <xsl:with-param name="source_str">
+            <xsl:call-template name="typograf.replace-quotes">
+              <xsl:with-param name="source_str" select="$step1"/>
+            </xsl:call-template>
+          </xsl:with-param>
         </xsl:call-template>
-      </xsl:with-param>
-    </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
 
   </xsl:template>
 
