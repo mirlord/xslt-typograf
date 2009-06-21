@@ -1,0 +1,10 @@
+
+xslt-typograf todo-list:
+ * automatically add [nbsp] in most common cases
+ * contents of specific elements is preformatted, it's typographical
+   re-formatting should be omitted
+ * replacements for (c), (r), (tm), +/-
+ * correction of some some typical orthographic errors
+ * remove spaces before punctuation marks (periods, commas, [semi]colons, etc.)
+ * adding spaces after punctuation marks
+
