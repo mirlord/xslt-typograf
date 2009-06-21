@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!-- *********************************************************************
+     * This program is free software. It comes without any warranty, to
+     * the extent permitted by applicable law. You can redistribute it
+     * and/or modify it under the terms of the Do What The Fuck You Want
+     * To Public License, Version 2, as published by Sam Hocevar. See
+     * COPYING file for more details. */ 
+     ********************************************************************* -->
+
 <!DOCTYPE stylesheet [
   <!ENTITY nbsp "&#x00A0;">
   <!ENTITY ldash "&#x2014;">
