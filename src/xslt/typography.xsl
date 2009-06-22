@@ -27,12 +27,10 @@
   <!-- ROOT template -->
   <xsl:template match="text()">
     
-    <xsl:choose>
-      <xsl:when test="$typograf.cfg.debug='true'">
-        [DEBUG {<xsl:value-of select="local-name(..)"/>},
-               {<xsl:value-of select="contains($typograf.cfg.tags.ignore, local-name(..))"/>}]
-      </xsl:when>
-    </xsl:choose>
+    <xsl:if test="$typograf.cfg.debug='true'">
+      [DEBUG {<xsl:value-of select="local-name(..)"/>},
+             {<xsl:value-of select="contains($typograf.cfg.tags.ignore, local-name(..))"/>}]
+    </xsl:if>
 
     <!-- ignoring tags with preformatted content -->
     <xsl:choose>
@@ -42,11 +40,26 @@
       <xsl:otherwise>
         <!-- ok, let's process this -->
 
+        <xsl:variable name="normalized_source">
+          <xsl:if test="starts-with(., ' ')">
+            <xsl:text> </xsl:text>
+          </xsl:if>
+          <xsl:value-of select="normalize-space(.)"/>
+          <!-- this ugly test expression - just an implementation of the ends-with,
+               which is absent in xpath spec. Arghhh... -->
+          <xsl:if test="substring(., string-length(.), 1)=' '">
+            <xsl:if test="$typograf.cfg.debug='true'">
+              [DEBUG {string '<xsl:value-of select="."/>' ends with space}]
+            </xsl:if>
+            <xsl:text> </xsl:text>
+          </xsl:if>
+        </xsl:variable>
+
         <xsl:variable name="step1">
           <xsl:choose>
             <xsl:when test="$typograf.cfg.replace.mdots='true'">
               <xsl:call-template name="typograf.replace-mdots">
-                <xsl:with-param name="source_str" select="normalize-space(.)"/>
+                <xsl:with-param name="source_str" select="$normalized_source"/>
               </xsl:call-template>
             </xsl:when>
             <xsl:otherwise>
@@ -105,11 +118,9 @@
       <xsl:text>''</xsl:text>
     </xsl:param>
 
-    <xsl:variable name="debug">
+    <xsl:if test="$typograf.cfg.debug='true'">
       [CALL: {<xsl:value-of select="$source_str"/>} {oq: <xsl:value-of select="$opening_quot"/>} {cq: <xsl:value-of select="$closing_quot"/>} {oqr: <xsl:value-of select="$opening_quot_repl"/>} {cqr: <xsl:value-of select="$closing_quot_repl"/>} {oqi: <xsl:value-of select="$opening_quot_int"/>} {cqi: <xsl:value-of select="$closing_quot_int"/>}]
-    </xsl:variable>
-
-    <!--<xsl:value-of select="$debug"/>-->
+    </xsl:if>
 
     <xsl:choose>
       <!-- skipping all the typographical quotes, if they are already used by author -->

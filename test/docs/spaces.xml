@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<db:article xmlns:db="http://docbook.org/ns/docbook"
+            version="5.0"
+            lang="RU">
+
+  <db:sect1>
+    <db:title>Тесты корректного обращения с пробелами</db:title>
+
+    <db:para>Простой тест <db:command>для пары слов</db:command> внутри inline-тэга</db:para>
+    <db:para>Другой простой тест с тэгом-разделителем<db:coloured-nbsp/>слов в предложении</db:para>
+
+  </db:sect1>
+
+</db:article>
+
+
+

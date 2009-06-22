@@ -22,6 +22,14 @@
     </html>
   </xsl:template>
 
+  <xsl:template match="db:coloured-nbsp">
+    <span style="background-color: #000000">&#x00a0;</span>
+  </xsl:template>
+
+  <xsl:template match="db:command">
+    <tt><xsl:apply-templates/></tt>
+  </xsl:template>
+
   <xsl:template match="db:screen">
     <pre><xsl:apply-templates/></pre>
   </xsl:template>
