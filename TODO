@@ -2,6 +2,7 @@
 xslt-typograf todo-list:
  * documentation...
  * handling of paired quotes, located in different, but one-level nodes (siblings)
+ * internal quotes (``'') should be replaced with «» in case they are not surrounded by ""
  * automatically add [nbsp] in most common cases
  * contents of specific elements is preformatted, it's typographical
    re-formatting should be omitted
