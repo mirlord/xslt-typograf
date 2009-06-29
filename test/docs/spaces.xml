@@ -8,6 +8,11 @@
     <db:title>Тесты корректного обращения с пробелами</db:title>
 
     <db:para>Простой тест <db:command>для пары слов</db:command> внутри inline-тэга</db:para>
+    <db:para>
+      Непростой тест <db:command>для пары слов</db:command>
+      потому что после тэга не пробел, а перевод строки.
+      А уж <db:command>тут вот:</db:command>	вообще tab!
+    </db:para>
     <db:para>Другой простой тест с тэгом-разделителем<db:coloured-nbsp/>слов в предложении</db:para>
 
   </db:sect1>

@@ -10,6 +10,9 @@
 
 <!DOCTYPE stylesheet [
   <!ENTITY nbsp "&#x00A0;">
+  <!ENTITY cr "&#x000A;">
+  <!ENTITY lf "&#x000D;">
+  <!ENTITY tab "&#x0009;">
   <!ENTITY ldash "&#x2014;">
   <!ENTITY laquo "&#x00AB;">
   <!ENTITY raquo "&#x00BB;">
@@ -23,6 +26,16 @@
   <xsl:param name="typograf.cfg.replace.mdots" select="'true'"/>
   <xsl:param name="typograf.cfg.tags.ignore" select="'|screen|synopsis|'"/>
   <xsl:param name="typograf.cfg.debug" select="'false'"/>
+
+  <xsl:variable name="cr">
+    <xsl:text>&cr;</xsl:text>
+  </xsl:variable>
+  <xsl:variable name="lf">
+    <xsl:text>&lf;</xsl:text>
+  </xsl:variable>
+  <xsl:variable name="tab">
+    <xsl:text>&tab;</xsl:text>
+  </xsl:variable>
 
   <!-- ROOT template -->
   <xsl:template match="text()">
@@ -41,13 +54,21 @@
         <!-- ok, let's process this -->
 
         <xsl:variable name="normalized_source">
-          <xsl:if test="starts-with(., ' ')">
+          <xsl:if test="starts-with(., ' ') or
+                        starts-with(., $cr) or
+                        starts-with(., $lf) or
+                        starts-with(., $tab)">
             <xsl:text> </xsl:text>
           </xsl:if>
           <xsl:value-of select="normalize-space(.)"/>
-          <!-- this ugly test expression - just an implementation of the ends-with,
+          <!-- this following - just an implementation of the ends-with,
                which is absent in xpath spec. Arghhh... -->
-          <xsl:if test="substring(., string-length(.), 1)=' '">
+          <xsl:variable name="lastchar"
+                        select="substring(., string-length(.), 1)"/>
+          <xsl:if test="$lastchar=' ' or
+                        $lastchar=$cr or
+                        $lastchar=$lf or
+                        $lastchar=$tab">
             <xsl:if test="$typograf.cfg.debug='true'">
               [DEBUG {string '<xsl:value-of select="."/>' ends with space}]
             </xsl:if>
