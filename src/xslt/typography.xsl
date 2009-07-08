@@ -24,7 +24,12 @@
     version="1.0">
 
   <xsl:param name="typograf.cfg.replace.mdots" select="'true'"/>
-  <xsl:param name="typograf.cfg.tags.ignore" select="'|screen|synopsis|'"/>
+  <xsl:param name="typograf.cfg.tags.ignore"
+             select="'|synopsis|cmdsynopsis|computeroutput|funcsynopsis|
+             |lineannotation|literallayout|programlisting|screen|screenshot|
+             |userinput|constant|envar|filename|lineannotation|literal|
+             |markup|option|optional|parameter|prompt|replaceable|
+             |tag|varname|command|'"/>
   <xsl:param name="typograf.cfg.debug" select="'false'"/>
 
   <xsl:variable name="cr">
