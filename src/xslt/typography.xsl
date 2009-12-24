@@ -61,7 +61,7 @@
             <xsl:text> </xsl:text>
           </xsl:if>
           <xsl:value-of select="normalize-space(.)"/>
-          <!-- this following - just an implementation of the ends-with,
+          <!-- the following - just an implementation of the ends-with,
                which is absent in xpath spec. Arghhh... -->
           <xsl:variable name="lastchar"
                         select="substring(., string-length(.), 1)"/>
