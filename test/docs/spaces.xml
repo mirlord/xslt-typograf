@@ -11,7 +11,7 @@
     <db:para>
       Непростой тест <db:command>для пары слов</db:command>
       потому что после тэга не пробел, а перевод строки.
-      А уж <db:command>тут вот:</db:command>	вообще tab!
+      А уж - <db:filename>тут вот:</db:filename>	вообще tab!
     </db:para>
     <db:para>Другой простой тест с тэгом-разделителем<db:coloured-nbsp/>слов в предложении</db:para>
 
