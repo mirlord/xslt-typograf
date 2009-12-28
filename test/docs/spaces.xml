@@ -7,6 +7,8 @@
   <db:sect1>
     <db:title>Тесты корректного обращения с пробелами</db:title>
 
+    <db:para>Проверка типографики в союзах и предлогах.</db:para>
+
     <db:para>Простой тест <db:command>для пары слов</db:command> внутри inline-тэга</db:para>
     <db:para>
       Непростой тест <db:command>для пары слов</db:command>

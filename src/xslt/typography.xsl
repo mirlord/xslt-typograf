@@ -24,6 +24,9 @@
     version="1.0">
 
   <xsl:param name="typograf.cfg.replace.mdots" select="'true'"/>
+  <xsl:param name="typograf.cfg.replace.quotes" select="'true'"/>
+  <xsl:param name="typograf.cfg.replace.dashes" select="'true'"/>
+  <xsl:param name="typograf.cfg.replace.unions" select="'true'"/>
   <xsl:param name="typograf.cfg.tags.ignore"
              select="'|synopsis|cmdsynopsis|computeroutput|funcsynopsis|
              |lineannotation|literallayout|programlisting|screen|screenshot|
@@ -89,18 +92,53 @@
               </xsl:call-template>
             </xsl:when>
             <xsl:otherwise>
-              <xsl:value-of select="."/>
+              <xsl:value-of select="$normalized_source"/>
             </xsl:otherwise>
           </xsl:choose>
         </xsl:variable>
 
-        <xsl:call-template name="typograf.replace-dash">
-          <xsl:with-param name="source_str">
-            <xsl:call-template name="typograf.replace-quotes">
-              <xsl:with-param name="source_str" select="$step1"/>
-            </xsl:call-template>
-          </xsl:with-param>
-        </xsl:call-template>
+        <xsl:variable name="step2">
+          <xsl:choose>
+            <xsl:when test="$typograf.cfg.replace.quotes='true'">
+              <xsl:call-template name="typograf.replace-quotes">
+                <xsl:with-param name="source_str" select="$step1"/>
+              </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="$step1"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+
+        <xsl:variable name="step3">
+          <xsl:choose>
+            <xsl:when test="$typograf.cfg.replace.dashes='true'">
+              <xsl:call-template name="typograf.replace-dash">
+                <xsl:with-param name="source_str" select="$step2"/>
+              </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="$step2"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+
+        <xsl:variable name="step4">
+          <xsl:choose>
+            <xsl:when test="$typograf.cfg.replace.unions='true'">
+              <xsl:call-template name="typograf.replace-unions-and-prepositions">
+                <xsl:with-param name="source_str" select="$step3"/>
+              </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="$step3"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+
+        <!-- real output -->
+        <xsl:value-of select="$step4"/>
+
       </xsl:otherwise>
     </xsl:choose>
 
@@ -236,6 +274,45 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="$source_str"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="typograf.replace-unions-and-prepositions">
+    <xsl:param name="source_str" select="."/>
+    <xsl:variable name="wspace" select="' '"/>
+    <xsl:variable name="pres"
+                  select="'|и|или|не|а|но|да|либо|ни|с|в|что|как|для|на|без|из|
+                  |над|под|на|за|к|по|об||от|о|у|при|перед|'"/>
+    <!--<xsl:variable name="posts"-->
+                  <!--select="'|же|'"/>-->
+    <xsl:variable name="head">
+      <xsl:value-of select="substring-before( $source_str, $wspace )"/>
+    </xsl:variable>
+    <xsl:variable name="tail">
+      <xsl:value-of select="substring-after( $source_str, $wspace )"/>
+    </xsl:variable>
+
+    <xsl:choose>
+      <xsl:when test="$head = ''">
+        <xsl:value-of select="$source_str"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$head"/>
+        <xsl:choose>
+          <xsl:when test="contains( $pres, concat('|', $head, '|') )">
+            <xsl:text>&nbsp;</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text> </xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
+        <xsl:if test="$tail != ''">
+          <xsl:call-template name="typograf.replace-unions-and-prepositions">
+            <xsl:with-param name="source_str"
+                            select="$tail"/>
+          </xsl:call-template>
+        </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
