@@ -283,7 +283,7 @@
     <xsl:variable name="wspace" select="' '"/>
     <xsl:variable name="pres"
                   select="'|и|или|не|а|но|да|либо|ни|с|в|что|как|для|на|без|из|
-                  |над|под|на|за|к|по|об||от|о|у|при|перед|'"/>
+                           |над|под|на|за|к|по|об||от|о|у|при|перед|'"/>
     <!--<xsl:variable name="posts"-->
                   <!--select="'|же|'"/>-->
     <xsl:variable name="head">
@@ -294,7 +294,7 @@
     </xsl:variable>
 
     <xsl:choose>
-      <xsl:when test="$head = ''">
+      <xsl:when test="$head = '' and $tail = ''">
         <xsl:value-of select="$source_str"/>
       </xsl:when>
       <xsl:otherwise>
